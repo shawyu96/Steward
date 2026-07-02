@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var serviceManager: ServiceManager
+    @EnvironmentObject private var remoteServerManager: RemoteServerManager
     @State private var selectedPage: Page = .services
     @State private var selectedService: ServiceModel?
     @State private var hoveredServiceID: String?
@@ -12,6 +13,7 @@ struct ContentView: View {
     enum Page: String, CaseIterable {
         case services = "所有服务"
         case commands = "快捷命令"
+        case remoteServers = "远程服务器"
     }
 
     var body: some View {
@@ -54,6 +56,7 @@ struct ContentView: View {
             sectionLabel("视图")
             navButton(.services, icon: "▤")
             navButton(.commands, icon: "⌘")
+            navButton(.remoteServers, icon: "🔗")
 
             sectionLabel("分组")
 
@@ -140,7 +143,7 @@ struct ContentView: View {
                 Text(icon).font(.system(size: 14)).frame(width: 18)
                 Text(page.rawValue).font(.system(size: 13))
                 Spacer()
-                Text("\(page == .services ? serviceManager.runningCount : serviceManager.commands.count)")
+                Text("\\(page == .services ? serviceManager.runningCount : page == .commands ? serviceManager.commands.count : remoteServerManager.servers.count)")
                     .font(.system(size: 10, weight: .medium))
                     .foregroundColor(active ? Theme.accent : Theme.mutedText)
                     .padding(.horizontal, 6)
@@ -210,6 +213,8 @@ struct ContentView: View {
                 )
             case .commands:
                 QuickCommandsView()
+            case .remoteServers:
+                RemoteServerListView()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -4,11 +4,17 @@ import SwiftUI
 struct StewardApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var serviceManager = ServiceManager()
+    @StateObject private var remoteServerManager: RemoteServerManager = {
+        let m = RemoteServerManager()
+        m.load()
+        return m
+    }()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(serviceManager)
+                .environmentObject(remoteServerManager)
                 .preferredColorScheme(.dark)
         }
         .windowResizability(.contentMinSize)
