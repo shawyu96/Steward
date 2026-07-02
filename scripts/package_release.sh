@@ -45,13 +45,17 @@ tell application "Finder"
     set icon size of icon view options of container window to 96
     set position of item "Steward.app" of container window to {340, 120}
     set position of item "Applications" of container window to {130, 120}
-    close
   end tell
+  close every window
 end tell
 EOF
 
 sleep 1
-hdiutil detach "/Volumes/$VOL_NAME" -quiet -force 2>/dev/null || true
+# Retry detach — old dist DMG can block the mount
+for _ in 1 2 3; do
+  if hdiutil detach "/Volumes/$VOL_NAME" -quiet -force 2>/dev/null; then break; fi
+  sleep 1
+done
 sleep 1
 
 mkdir -p dist

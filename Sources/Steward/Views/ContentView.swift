@@ -143,7 +143,7 @@ struct ContentView: View {
                 Text(icon).font(.system(size: 14)).frame(width: 18)
                 Text(page.rawValue).font(.system(size: 13))
                 Spacer()
-                Text("\\(page == .services ? serviceManager.runningCount : page == .commands ? serviceManager.commands.count : remoteServerManager.servers.count)")
+                Text("\(page == .services ? serviceManager.runningCount : page == .commands ? serviceManager.commands.count : remoteServerManager.servers.count)")
                     .font(.system(size: 10, weight: .medium))
                     .foregroundColor(active ? Theme.accent : Theme.mutedText)
                     .padding(.horizontal, 6)
