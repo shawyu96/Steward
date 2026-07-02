@@ -205,6 +205,8 @@ final class ServiceManager: ObservableObject {
             process.terminate()
             processes.removeValue(forKey: service.id)
             startTimes.removeValue(forKey: service.id)
+        } else if let pid = knownRunningPIDs[service.id] {
+            kill(pid_t(pid), SIGTERM) // ponytail: pgrep-matched orphan
         }
         knownRunningPIDs.removeValue(forKey: service.id)
         refreshAll()
@@ -372,7 +374,7 @@ final class ServiceManager: ObservableObject {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/bin/zsh")
         let resolvedCommand = resolveAliases("\(config.command) \(config.arguments.joined(separator: " "))")
-        process.arguments = ["-c", resolvedCommand]
+        process.arguments = ["-c", "exec " + resolvedCommand] // ponytail: single-command only; compound (&&, |) needs a script wrapper
 
         if let wd = config.workingDirectory {
             process.currentDirectoryURL = URL(fileURLWithPath: wd)
