@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3a3a3c"/>
+      <stop offset="100%" stop-color="#1c1c1e"/>
+    </linearGradient>
+    <linearGradient id="box" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#63b3ed"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#93c5fd"/>
+      <stop offset="100%" stop-color="#63b3ed"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded rect (macOS app icon shape) -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+
+  <!-- Box body -->
+  <rect x="262" y="452" width="500" height="340" rx="32" fill="url(#box)"/>
+  
+  <!-- Box lid -->
+  <path d="M232 452 L512 372 L792 452" fill="none" stroke="url(#lid)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Box lid top face -->
+  <path d="M232 452 L232 420 Q232 388 262 378 L512 298 L762 378 Q792 388 792 420 L792 452" 
+        fill="url(#lid)" stroke="none" opacity="0.85"/>
+  
+  <!-- Lid highlight -->
+  <path d="M282 408 L512 332 L742 408" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Box face highlight -->
+  <rect x="282" y="472" width="460" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
+
+  <!-- Gear icon on box -->
+  <g transform="translate(512, 622)">
+    <!-- Outer gear -->
+    <path d="M0 -56 L12 -52 L18 -64 L30 -56 L30 -42 L44 -38 L44 -24 L32 -18 L32 -4 L44 4 L40 16 L28 14 L20 26 L8 20 L4 32 L-10 28 L-14 16 L-28 14 L-32 2 L-20 -6 L-22 -20 L-36 -22 L-34 -36 L-20 -36 L-16 -48 L-4 -46 Z" 
+          fill="rgba(255,255,255,0.9)" transform="rotate(15)"/>
+    <!-- Inner ring -->
+    <circle cx="0" cy="0" r="28" fill="none" stroke="url(#bg)" stroke-width="10"/>
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="10" fill="rgba(255,255,255,0.7)"/>
+  </g>
+
+  <!-- Subtle glow behind gear -->
+  <circle cx="512" cy="622" r="80" fill="rgba(99,179,237,0.08)"/>
+</svg>
