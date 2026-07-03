@@ -20,11 +20,7 @@ final class RemoteServerManager: ObservableObject {
               let decoded = try? JSONDecoder().decode([RemoteServerConfig].self, from: data) else {
             servers = []; return
         }
-        servers = decoded.map {
-            var s = $0
-            if s.hasPassword { s.password = KeychainHelper.read(account: s.keychainAccount) }
-            return s
-        }
+        servers = decoded // ponytail: passwords loaded lazily on first SSH use to avoid keychain dialog on launch
     }
 
     func save() {
@@ -69,7 +65,7 @@ final class RemoteServerManager: ObservableObject {
         }
     }
 
-    private func ping(_ server: RemoteServerConfig) async -> Bool {
+    func ping(_ server: RemoteServerConfig) async -> Bool {
         let pw = server.password ?? KeychainHelper.read(account: server.keychainAccount)
         let args = sshArgs(server, command: "echo ok", extra: ["-o", "ConnectTimeout=3"])
         return await runSSH(args, password: pw).exitCode == 0

@@ -21,8 +21,19 @@ cp "$BUILD_DIR/$APP_NAME" "$APP_DIR/Contents/MacOS/$APP_NAME"
 cp Resources/Info.plist "$APP_DIR/Contents/Info.plist"
 cp Resources/Steward.icns "$APP_DIR/Contents/Resources/Steward.icns" 2>/dev/null || true
 
-# Ad-hoc sign
-codesign --force --deep --sign - "$APP_DIR" 2>/dev/null || true
+# Use stable cert if available (avoids keychain dialog from changing ad-hoc identity)
+# Prefer Steward Local Signing cert (created by scripts/setup_signing.sh)
+CERT=$(security find-identity 2>/dev/null | grep -E '^ *[0-9]+\)' | grep -i "Steward Local Signing" | head -1 | sed 's/.*"\(.*\)".*/\1/' || true)
+if [ -z "$CERT" ]; then
+  # Fallback to Apple Development cert (from Xcode)
+  CERT=$(security find-identity 2>/dev/null | grep -E '^ *[0-9]+\)' | grep -i "Apple Development" | head -1 | sed 's/.*"\(.*\)".*/\1/' || true)
+fi
+if [ -n "$CERT" ]; then
+  echo "Signing with: $CERT"
+  codesign --force --deep --sign "$CERT" "$APP_DIR"
+else
+  codesign --force --deep --sign - "$APP_DIR"
+fi
 
 echo "✅ $APP_DIR"
 echo ""

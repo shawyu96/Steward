@@ -16,6 +16,9 @@ struct StewardApp: App {
                 .environmentObject(serviceManager)
                 .environmentObject(remoteServerManager)
                 .preferredColorScheme(.dark)
+                .onAppear {
+                    startIpcServer(serviceManager: serviceManager, remoteServerManager: remoteServerManager)
+                }
         }
         .windowResizability(.contentMinSize)
         .windowStyle(.titleBar)
