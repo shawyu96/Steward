@@ -22,6 +22,8 @@ final class ServiceManager: ObservableObject {
 
     /// Persists PIDs matched via pgrep on startup so they survive subsequent refreshAll() calls.
     private var knownRunningPIDs: [String: Int] = [:]
+    /// Services intentionally stopped by user — skip recording exit code in terminationHandler.
+    private var intentionalStops: Set<String> = []
 
     /// Build the dictionary key used to store a custom process.
     private func processKey(_ name: String) -> String { "custom-\(name)" }
@@ -201,6 +203,9 @@ final class ServiceManager: ObservableObject {
     }
 
     func stop(_ service: ServiceModel) {
+        let key = processKey(service.name)
+        intentionalStops.insert(key)
+        lastExitCodes.removeValue(forKey: key)
         if let process = processes[service.id] {
             process.terminate()
             processes.removeValue(forKey: service.id)
@@ -401,7 +406,7 @@ final class ServiceManager: ObservableObject {
                 let key = processKey(config.name)
                 self.processes.removeValue(forKey: key)
                 self.knownRunningPIDs.removeValue(forKey: key)
-                if exitCode != 0 {
+                if self.intentionalStops.remove(key) == nil, exitCode != 0 {
                     self.lastExitCodes[key] = exitCode
                 }
                 self.refreshAll()
